@@ -6,11 +6,14 @@ let countdownInterval;
 
 class Countdown {
     constructor (countdown_container_ID, duration) {
-        this.reservationEnd = this.obtainEndDate(duration);
-
-
-        /* this.minutes = duration - 1; // Countdown substract current minute
-        this.seconds = 59; // Countdown substract current second */
+        
+        if (sessionStorage.getItem('storedReservationEnd')) {
+            this.reservationEnd = sessionStorage.getItem('storedReservationEnd');
+        } else {
+            this.reservationEnd = this.obtainEndDate(duration);
+            sessionStorage.setItem('storedReservationEnd', this.reservationEnd);
+            sessionStorage.setItem('storedCountdownContainerID', countdown_container_ID);
+        };
         
         this.countdownContainerElt = document.getElementById(countdown_container_ID);
         
@@ -19,7 +22,7 @@ class Countdown {
 
         this.countdownTextElt = document.createElement("p");
         this.countdownTextElt.id = countdown_container_ID + "_countdown_text";
-        this.countdownTextElt.textContent = "Votre réservation expirera dans : minute(s) et seconde(s).";
+        this.countdownTextElt.textContent = "Votre réservation expirera dans ...";
         
         this.countdownContainerElt.innerHTML = "";
         this.countdownContainerElt.appendChild(this.countdownElt);
@@ -53,22 +56,15 @@ class Countdown {
             this.countdownTextElt.textContent = "Votre réservation expirera dans : " + minutes + " minute(s) et " + seconds + " seconde(s).";
         }
     }
-    
-    /* tick () {
-        if (this.seconds > 1) {
-            this.seconds--
-            this.countdownTextElt.textContent = "Votre réservation expirera dans : " + this.minutes + " minute(s) et " + this.seconds + " seconde(s).";
-        } else {
-            this.minutes--;
-            if (this.minutes < 0){
-                clearInterval(this.countdownInterval);
-                this.countdownContainerElt.innerHTML = "";
-                alert("Votre reservation à expirée."); 
-            } else {
-                this.seconds = 60;
-                this.countdownTextElt.textContent = "Votre réservation expirera dans : " + this.minutes + " minute(s) et 00 seconde(s)."; 
-            }
-        }
-    }; */
-    
 }
+
+function reservationCheck() {
+    if (sessionStorage.getItem('storedReservationEnd')) {
+        let countDown = new Countdown(sessionStorage.getItem('storedCountdownContainerID', 20));
+    } else {
+
+    }
+}
+window.onload = function() {
+    reservationCheck();
+  };
