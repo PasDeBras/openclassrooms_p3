@@ -44,6 +44,7 @@ class Countdown {
             clearInterval(this.countdownInterval);
             this.countdownContainerElt.innerHTML = "";
             alert("Votre reservation à expirée.");
+            sessionStorage.removeItem('storedReservationEnd');
         } else {
             let _second = 1000;
             let _minute = _second * 60;
